@@ -1,0 +1,2 @@
+-- ComfyMage 1.0
+-- Placeholder for future addon code.
