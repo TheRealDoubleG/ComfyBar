@@ -1,0 +1,6 @@
+## Title: ComfyMage
+## Notes: Comfort and quality-of-life addon for Mage on WoW Forever
+## Author: TheRealDoubleG
+## Version: 1.0
+
+Core.lua
