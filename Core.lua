@@ -1,2 +1,2 @@
--- ComfyMage 1.0
+-- ComfyBar 0.1 Beta
 -- Placeholder for future addon code.
