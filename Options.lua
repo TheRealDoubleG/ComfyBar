@@ -298,6 +298,16 @@ function CB:InitializeOptions()
         CB:RefreshOptions()
     end)
 
+    CreateButton(bars, self:T("APPLY_LAYOUT_ALL"), 205, -455, 235, function()
+        CB:ApplyLayoutToAllBars(selectedBar)
+    end)
+
+    local applyHint = bars:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    applyHint:SetPoint("TOPLEFT", 205, -486)
+    applyHint:SetWidth(430)
+    applyHint:SetJustifyH("LEFT")
+    applyHint:SetText(self:T("APPLY_LAYOUT_ALL_HINT"))
+
     local profiles = frame.pages[3]
     local ptitle = profiles:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     ptitle:SetPoint("TOPLEFT", 20, -10)
@@ -419,7 +429,7 @@ function CB:InitializeOptions()
     notice:SetText(self:T("INFO_NOTICE"))
 
     local copyright = infoBox:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-    copyright:SetPoint("TOPLEFT", 28, -414)
+    copyright:SetPoint("BOTTOMLEFT", 28, 68)
     copyright:SetText("© 2026 TheRealDoubleG")
 
     local thanks = infoBox:CreateFontString(nil, "ARTWORK", "GameFontHighlight")

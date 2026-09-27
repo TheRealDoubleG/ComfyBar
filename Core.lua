@@ -4,7 +4,7 @@ ComfyBar = ComfyBar or {}
 local CB = ComfyBar
 
 CB.name = ADDON_NAME or "ComfyBar"
-CB.version = "0.4"
+CB.version = "0.5"
 CB.buildDate = "27.09.2026"
 CB.status = "Beta"
 CB.gameVersion = "WoW Forever 1.60.1"
@@ -167,6 +167,30 @@ function CB:ResetBarPosition(key)
     self.db.bars[key].x = pos.x
     self.db.bars[key].y = pos.y
     if self.RefreshBars then self:RefreshBars() end
+end
+
+function CB:ApplyLayoutToAllBars(sourceKey)
+    if InCombatLockdown and InCombatLockdown() then
+        self:Print(self:T("COMBAT_LOCK"))
+        return false
+    end
+    if not self.db or not self.db.bars then return false end
+
+    local source = self.db.bars[sourceKey]
+    if not source then return false end
+
+    for key, cfg in pairs(self.db.bars) do
+        if key ~= sourceKey and type(cfg) == "table" then
+            cfg.orientation = source.orientation
+            cfg.scale = source.scale
+            cfg.spacing = source.spacing
+        end
+    end
+
+    if self.RefreshBars then self:RefreshBars() end
+    if self.RefreshOptions then self:RefreshOptions() end
+    self:Print(self:T("LAYOUT_APPLIED"))
+    return true
 end
 
 function CB:SetEnabled(value)

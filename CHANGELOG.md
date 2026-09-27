@@ -1,5 +1,11 @@
 # ComfyBar Changelog
 
+## 0.5 Beta – 27.09.2026
+- Fixed overlapping copyright/thanks text at the bottom of the Info tab.
+- Added "Apply layout to all bars" in the Bars tab.
+- The new one-click layout action copies orientation, scale and icon spacing from the currently selected bar to every ComfyBar bar while keeping visibility, combat behavior and positions independent.
+
+
 ## 0.4 Beta – 27.09.2026
 - Added independent full anchor/position saving for every ComfyBar bar.
 - Added separate bottom-right default positions for Utility, Buffs, Consumables, Professions & Scrolls and Racials.
