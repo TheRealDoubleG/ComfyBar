@@ -1,5 +1,17 @@
 # ComfyBar Changelog
 
+## 0.12 Beta – 27.09.2026
+- Added the shared **Settings** tab immediately before Info.
+- Added automatic per-character saved profiles plus account and named custom profiles, with copy/load from another known character profile.
+- Added window lock, window/background opacity, optional Blizzard border and minimalist borderless background.
+- Moved minimap presentation controls into Settings.
+- Tightened the default centered bar stack slightly below the character.
+- Improved migration of bars still sitting on the old bottom-right defaults while leaving manually moved bars untouched.
+- Added one-time cleanup of saved spell actions that are not known by the current character.
+- Renamed the old feature-profile page to **Presets / Voreinstellungen** to distinguish it from saved character profiles.
+- Changed active tabs to a selected/pushed state and cleaned Info footer spacing.
+
+
 ## 0.11 Beta – 27.09.2026
 - Added reliable ComfyHub minimap bundling support.
 - The standalone minimap button now hides while ComfyHub bundling is active.
