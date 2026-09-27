@@ -1,5 +1,13 @@
 # ComfyBar Changelog
 
+## 0.4 Beta – 27.09.2026
+- Added independent full anchor/position saving for every ComfyBar bar.
+- Added separate bottom-right default positions for Utility, Buffs, Consumables, Professions & Scrolls and Racials.
+- Added a saved ComfyBar settings-window position with a left-offset default so it no longer opens directly on top of OnPoint.
+- Moved normal ComfyBar bars to MEDIUM frame strata / level 5.
+- Moved the settings window to HIGH strata / level 20, enabled top-level behavior and raise-on-click.
+
+
 ## 0.3 Beta – 27.09.2026
 - Removed the permanent Quickslot background squares from normal action buttons for a cleaner icon-only look.
 - Increased the visible icon area inside each action button.

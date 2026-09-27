@@ -143,15 +143,35 @@ function CB:InitializeOptions()
 
     local frame = CreateFrame("Frame", "ComfyBarOptions", UIParent, "BasicFrameTemplateWithInset")
     frame:SetSize(760, 620)
-    frame:SetPoint("CENTER")
-    frame:SetFrameStrata("DIALOG")
+    local savedPos = self.db and self.db.optionsWindow or nil
+    local point = savedPos and savedPos.point or "CENTER"
+    local relativePoint = savedPos and savedPos.relativePoint or point
+    frame:SetPoint(point, UIParent, relativePoint, savedPos and savedPos.x or -360, savedPos and savedPos.y or 40)
+    frame:SetClampedToScreen(true)
+    frame:SetFrameStrata("HIGH")
+    frame:SetFrameLevel(20)
+    if frame.SetToplevel then frame:SetToplevel(true) end
     frame:Hide()
     frame.TitleText:SetText("ComfyBar")
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:RegisterForDrag("LeftButton")
-    frame:SetScript("OnDragStart", frame.StartMoving)
-    frame:SetScript("OnDragStop", frame.StopMovingOrSizing)
+    frame:SetScript("OnMouseDown", function(self) self:Raise() end)
+    frame:SetScript("OnDragStart", function(self)
+        self:Raise()
+        self:StartMoving()
+    end)
+    frame:SetScript("OnDragStop", function(self)
+        self:StopMovingOrSizing()
+        local p, _, rp, x, y = self:GetPoint(1)
+        if CB.db and p then
+            CB.db.optionsWindow = CB.db.optionsWindow or {}
+            CB.db.optionsWindow.point = p
+            CB.db.optionsWindow.relativePoint = rp or p
+            CB.db.optionsWindow.x = x or 0
+            CB.db.optionsWindow.y = y or 0
+        end
+    end)
     table.insert(UISpecialFrames, frame:GetName())
     self.optionsFrame = frame
 

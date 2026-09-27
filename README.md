@@ -1,6 +1,6 @@
 # ComfyBar
 
-**Version 0.3 – Beta**  
+**Version 0.4 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
@@ -31,6 +31,8 @@ The first beta establishes the common framework:
 - Utility bar starts with the **Hearthstone**.
 - Built-in presets: **Minimal**, **Preferred**, **Complete**.
 - OnPoint-style settings window and minimap behavior.
+- Saved settings-window position with its own default location, so ComfyBar and OnPoint no longer open directly on top of each other.
+- Each bar keeps its own full UI anchor/position and uses a separate bottom-right default position.
 - Minimap button: left click toggles ComfyBar, right click opens settings, drag moves it when unlocked.
 - German UI on a German client, English otherwise.
 - Info tab with addon version, build date, client build/interface, author, Discord and compatibility state.
@@ -72,7 +74,7 @@ World of Warcraft\Interface\AddOns\ComfyBar\ComfyBar.toc
 
 ## Development status
 
-ComfyBar is currently **Beta**. The 0.3 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
+ComfyBar is currently **Beta**. The 0.4 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
 
 ---
 
@@ -84,4 +86,4 @@ Die wichtigste Regel lautet:
 
 **Eine Eingabe des Spielers = höchstens eine Spielaktion.**
 
-Die Beta 0.3 liefert das aktuelle Test-Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.
+Die Beta 0.4 liefert das aktuelle Test-Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.

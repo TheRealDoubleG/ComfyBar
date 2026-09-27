@@ -4,7 +4,7 @@ ComfyBar = ComfyBar or {}
 local CB = ComfyBar
 
 CB.name = ADDON_NAME or "ComfyBar"
-CB.version = "0.3"
+CB.version = "0.4"
 CB.buildDate = "27.09.2026"
 CB.status = "Beta"
 CB.gameVersion = "WoW Forever 1.60.1"
@@ -16,11 +16,11 @@ CB.github = "https://github.com/TheRealDoubleG/ComfyBar"
 CB.editMode = false
 
 CB.defaultBarPositions = {
-    consumables = {x = -220, y = -180},
-    buffs = {x = -220, y = -225},
-    utility = {x = -220, y = -270},
-    professions = {x = -220, y = -315},
-    racials = {x = -220, y = -360},
+    utility = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 220},
+    buffs = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 170},
+    consumables = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 120},
+    professions = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 70},
+    racials = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 20},
 }
 
 local defaults = {
@@ -31,15 +31,22 @@ local defaults = {
         locked = false,
         angle = 220,
     },
+    optionsWindow = {
+        point = "CENTER",
+        relativePoint = "CENTER",
+        x = -360,
+        y = 40,
+    },
     bars = {
         consumables = {
             enabled = true,
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "CENTER",
-            x = -220,
-            y = -180,
+            point = "BOTTOMRIGHT",
+            relativePoint = "BOTTOMRIGHT",
+            x = -420,
+            y = 120,
             hideInCombat = true,
             actions = {},
         },
@@ -48,9 +55,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "CENTER",
-            x = -220,
-            y = -225,
+            point = "BOTTOMRIGHT",
+            relativePoint = "BOTTOMRIGHT",
+            x = -420,
+            y = 170,
             hideInCombat = true,
             actions = {},
         },
@@ -59,9 +67,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "CENTER",
-            x = -220,
-            y = -270,
+            point = "BOTTOMRIGHT",
+            relativePoint = "BOTTOMRIGHT",
+            x = -420,
+            y = 220,
             hideInCombat = true,
             actions = {
                 {kind = "item", itemID = 6948, label = "Hearthstone"},
@@ -72,9 +81,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "CENTER",
-            x = -220,
-            y = -315,
+            point = "BOTTOMRIGHT",
+            relativePoint = "BOTTOMRIGHT",
+            x = -420,
+            y = 70,
             hideInCombat = true,
             actions = {},
         },
@@ -83,9 +93,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "CENTER",
-            x = -220,
-            y = -360,
+            point = "BOTTOMRIGHT",
+            relativePoint = "BOTTOMRIGHT",
+            x = -420,
+            y = 20,
             hideInCombat = false,
             actions = {},
         },
@@ -151,7 +162,8 @@ function CB:ResetBarPosition(key)
     if not self.db or not self.db.bars[key] then return end
     local pos = self.defaultBarPositions[key]
     if not pos then return end
-    self.db.bars[key].point = "CENTER"
+    self.db.bars[key].point = pos.point or "BOTTOMRIGHT"
+    self.db.bars[key].relativePoint = pos.relativePoint or pos.point or "BOTTOMRIGHT"
     self.db.bars[key].x = pos.x
     self.db.bars[key].y = pos.y
     if self.RefreshBars then self:RefreshBars() end

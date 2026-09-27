@@ -398,6 +398,8 @@ function CB:CreateBar(key)
     local frame = CreateFrame("Frame", "ComfyBar_" .. key, UIParent, "BackdropTemplate")
     frame:SetSize(BUTTON_SIZE + FRAME_PADDING * 2, BUTTON_SIZE + FRAME_PADDING * 2)
     frame:SetClampedToScreen(true)
+    frame:SetFrameStrata("MEDIUM")
+    frame:SetFrameLevel(5)
     frame:SetMovable(true)
     frame:EnableMouse(true)
     frame:RegisterForDrag("LeftButton")
@@ -428,13 +430,13 @@ function CB:CreateBar(key)
     frame:SetScript("OnDragStop", function(self)
         self:StopMovingOrSizing()
         if not CB.editMode or IsLockedDown() then return end
-        local centerX, centerY = self:GetCenter()
-        local uiX, uiY = UIParent:GetCenter()
-        if centerX and centerY and uiX and uiY then
+        local point, _, relativePoint, xOfs, yOfs = self:GetPoint(1)
+        if point then
             local cfg = CB.db.bars[key]
-            cfg.point = "CENTER"
-            cfg.x = centerX - uiX
-            cfg.y = centerY - uiY
+            cfg.point = point
+            cfg.relativePoint = relativePoint or point
+            cfg.x = xOfs or 0
+            cfg.y = yOfs or 0
         end
     end)
 
@@ -495,7 +497,9 @@ function CB:ApplyBarPosition(key)
     if not bar or not cfg then return end
 
     bar:ClearAllPoints()
-    bar:SetPoint(cfg.point or "CENTER", UIParent, cfg.point or "CENTER", cfg.x or 0, cfg.y or 0)
+    local point = cfg.point or "BOTTOMRIGHT"
+    local relativePoint = cfg.relativePoint or point
+    bar:SetPoint(point, UIParent, relativePoint, cfg.x or 0, cfg.y or 0)
     bar:SetScale(tonumber(cfg.scale) or 1)
 end
 
