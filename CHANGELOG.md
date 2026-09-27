@@ -1,5 +1,10 @@
 # ComfyBar Changelog
 
+## 0.15 Beta – 27.09.2026
+- Fixed Background opacity so 0% fully removes the Comfy window background while the border can remain.
+- Aligned the shared Load / copy control with its profile dropdown.
+
+
 ## 0.14 Beta – 27.09.2026
 - Reworked action-button lifecycle to reuse a per-bar secure button pool instead of discarding and recreating SecureActionButtonTemplate frames on every refresh.
 - Structural bar rebuilds requested during combat are now deferred and flushed after PLAYER_REGEN_ENABLED.
