@@ -1,6 +1,16 @@
+## Interface: 16001
 ## Title: ComfyBar
 ## Notes: Customizable utility bars for buffs, consumables, professions, racials and more on WoW Forever.
+## Notes-deDE: Anpassbare Komfortleisten für Buffs, Verbrauchsgegenstände, Berufe, Rassenfähigkeiten und mehr in WoW Forever.
 ## Author: TheRealDoubleG
-## Version: 0.1 Beta
+## Version: 0.1
+## SavedVariables: ComfyBarDB
+## X-Website: https://github.com/TheRealDoubleG/ComfyBar
+## IconTexture: Interface\Icons\INV_Misc_Bag_10
 
+Locale.lua
 Core.lua
+Profiles.lua
+Bars.lua
+Minimap.lua
+Options.lua
