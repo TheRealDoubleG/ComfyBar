@@ -1,6 +1,6 @@
 # ComfyBar
 
-**Version 0.12 – Beta**  
+**Version 0.13 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
@@ -29,6 +29,7 @@ The first beta establishes the common framework:
 - Right-click a custom button in edit mode to remove it.
 - Optional per-bar **hide in combat** behavior.
 - Standard WoW spell/item icons, tooltips, item counts and cooldown sweeps.
+- Cooldown rendering safely forwards WoW protected/secret cooldown values to the native Cooldown widget without comparing them in addon Lua.
 - Utility bar starts with the **Hearthstone**.
 - Built-in presets: **Minimal**, **Preferred**, **Complete**.
 - ComfyOnPoint-style settings window and minimap behavior.
