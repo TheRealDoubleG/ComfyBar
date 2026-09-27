@@ -1,5 +1,12 @@
 # ComfyBar Changelog
 
+## 0.13 Beta – 27.09.2026
+- Fixed the repeating `Bars.lua:84` Lua error caused by comparing WoW protected/secret cooldown duration values.
+- Secret cooldown values are now passed directly to the native Cooldown widget instead of being inspected in addon Lua.
+- Added guarded handling for protected item-count values to prevent the same class of taint error there.
+- This stops the rapid error loop that could trigger WoW's "large number of errors" warning.
+
+
 ## 0.12 Beta – 27.09.2026
 - Added the shared **Settings** tab immediately before Info.
 - Added automatic per-character saved profiles plus account and named custom profiles, with copy/load from another known character profile.
