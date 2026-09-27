@@ -16,11 +16,11 @@ CB.github = "https://github.com/TheRealDoubleG/ComfyBar"
 CB.editMode = false
 
 CB.defaultBarPositions = {
-    utility = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -80},
-    buffs = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -130},
-    consumables = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -180},
-    professions = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -230},
-    racials = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -280},
+    utility = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -70},
+    buffs = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -115},
+    consumables = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -160},
+    professions = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -205},
+    racials = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -250},
 }
 
 local defaults = {
@@ -52,7 +52,7 @@ local defaults = {
             point = "CENTER",
             relativePoint = "CENTER",
             x = 0,
-            y = -180,
+            y = -160,
             hideInCombat = true,
             actions = {},
         },
@@ -64,7 +64,7 @@ local defaults = {
             point = "CENTER",
             relativePoint = "CENTER",
             x = 0,
-            y = -130,
+            y = -115,
             hideInCombat = true,
             actions = {},
         },
@@ -76,7 +76,7 @@ local defaults = {
             point = "CENTER",
             relativePoint = "CENTER",
             x = 0,
-            y = -80,
+            y = -70,
             hideInCombat = true,
             actions = {
                 {kind = "item", itemID = 6948, label = "Hearthstone"},
@@ -90,7 +90,7 @@ local defaults = {
             point = "CENTER",
             relativePoint = "CENTER",
             x = 0,
-            y = -230,
+            y = -205,
             hideInCombat = true,
             actions = {},
         },
@@ -102,7 +102,7 @@ local defaults = {
             point = "CENTER",
             relativePoint = "CENTER",
             x = 0,
-            y = -280,
+            y = -250,
             hideInCombat = false,
             actions = {},
         },
@@ -164,15 +164,18 @@ local legacyBarPositions = {
 
 function CB:MigrateLegacyBarAnchors()
     if not self.db or not self.db.bars then return end
+    if tonumber(self.db._centerDefaultsVersion) and tonumber(self.db._centerDefaultsVersion) >= 2 then return end
 
     for key, oldPos in pairs(legacyBarPositions) do
         local cfg = self.db.bars[key]
         local newPos = self.defaultBarPositions[key]
+        local x = cfg and tonumber(cfg.x)
+        local y = cfg and tonumber(cfg.y)
         if cfg and newPos
             and cfg.point == oldPos.point
             and (cfg.relativePoint == nil or cfg.relativePoint == oldPos.point)
-            and tonumber(cfg.x) == oldPos.x
-            and tonumber(cfg.y) == oldPos.y then
+            and x and math.abs(x - oldPos.x) <= 12
+            and y and math.abs(y - oldPos.y) <= 8 then
 
             cfg.point = newPos.point
             cfg.relativePoint = newPos.relativePoint
@@ -180,6 +183,39 @@ function CB:MigrateLegacyBarAnchors()
             cfg.y = newPos.y
         end
     end
+    self.db._centerDefaultsVersion = 2
+end
+
+function CB:PruneForeignCharacterSpells()
+    if not self.db or not self.db.bars then return end
+    if tonumber(self.db._characterSpellPruneVersion) and tonumber(self.db._characterSpellPruneVersion) >= 1 then return end
+
+    local canCheck = type(IsPlayerSpell) == "function" or type(IsSpellKnown) == "function"
+    if not canCheck then return end
+
+    for _, cfg in pairs(self.db.bars) do
+        if type(cfg) == "table" and type(cfg.actions) == "table" then
+            for index = #cfg.actions, 1, -1 do
+                local action = cfg.actions[index]
+                if action and action.kind == "spell" and action.spellID then
+                    local known = false
+                    if type(IsPlayerSpell) == "function" then
+                        local ok, value = pcall(IsPlayerSpell, action.spellID)
+                        known = ok and value and true or false
+                    end
+                    if not known and type(IsSpellKnown) == "function" then
+                        local ok, value = pcall(IsSpellKnown, action.spellID)
+                        known = ok and value and true or false
+                    end
+                    if not known then
+                        table.remove(cfg.actions, index)
+                    end
+                end
+            end
+        end
+    end
+
+    self.db._characterSpellPruneVersion = 1
 end
 
 function CB:InitializeDB()
@@ -304,6 +340,7 @@ eventFrame:SetScript("OnEvent", function(_, event, arg1)
         if CB.InitializeOptions then CB:InitializeOptions() end
         if CB.RefreshBars then CB:RefreshBars() end
     elseif event == "PLAYER_LOGIN" then
+        CB:PruneForeignCharacterSpells()
         if CB.RefreshBars then CB:RefreshBars() end
     elseif event == "PLAYER_REGEN_DISABLED" then
         CB.editMode = false
