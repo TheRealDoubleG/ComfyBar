@@ -4,7 +4,7 @@ ComfyBar = ComfyBar or {}
 local CB = ComfyBar
 
 CB.name = ADDON_NAME or "ComfyBar"
-CB.version = "0.13"
+CB.version = "0.14"
 CB.buildDate = "27.09.2026"
 CB.status = "Beta"
 CB.gameVersion = "WoW Forever 1.60.1"
@@ -14,6 +14,9 @@ CB.author = "TheRealDoubleG"
 CB.discord = "the.real.double.g"
 CB.github = "https://github.com/TheRealDoubleG/ComfyBar"
 CB.editMode = false
+CB.pendingBarRefresh = false
+CB.pendingVisualRefresh = false
+CB.pendingVisualElapsed = 0
 
 CB.defaultBarPositions = {
     utility = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -70},
@@ -321,6 +324,13 @@ SlashCmdList.COMFYBAR = function(msg)
     CB:OpenOptions()
 end
 
+local VISUAL_REFRESH_DELAY = 0.05
+
+function CB:QueueVisualRefresh()
+    self.pendingVisualRefresh = true
+    self.pendingVisualElapsed = 0
+end
+
 local eventFrame = CreateFrame("Frame")
 eventFrame:RegisterEvent("ADDON_LOADED")
 eventFrame:RegisterEvent("PLAYER_LOGIN")
@@ -330,6 +340,17 @@ eventFrame:RegisterEvent("BAG_UPDATE_DELAYED")
 eventFrame:RegisterEvent("BAG_UPDATE_COOLDOWN")
 eventFrame:RegisterEvent("SPELL_UPDATE_COOLDOWN")
 eventFrame:RegisterEvent("SPELLS_CHANGED")
+
+eventFrame:SetScript("OnUpdate", function(_, elapsed)
+    if not CB.pendingVisualRefresh then return end
+
+    CB.pendingVisualElapsed = (CB.pendingVisualElapsed or 0) + (tonumber(elapsed) or 0)
+    if CB.pendingVisualElapsed < VISUAL_REFRESH_DELAY then return end
+
+    CB.pendingVisualRefresh = false
+    CB.pendingVisualElapsed = 0
+    if CB.UpdateActionVisuals then CB:UpdateActionVisuals() end
+end)
 
 eventFrame:SetScript("OnEvent", function(_, event, arg1)
     if event == "ADDON_LOADED" then
@@ -347,12 +368,18 @@ eventFrame:SetScript("OnEvent", function(_, event, arg1)
         if CB.OnCombatStart then CB:OnCombatStart() end
         if CB.RefreshOptions then CB:RefreshOptions() end
     elseif event == "PLAYER_REGEN_ENABLED" then
-        if CB.RefreshBars then CB:RefreshBars() end
+        if CB.pendingBarRefresh and CB.RefreshBars then
+            CB:RefreshBars()
+        elseif CB.QueueVisualRefresh then
+            CB:QueueVisualRefresh()
+        end
         if CB.RefreshOptions then CB:RefreshOptions() end
     elseif event == "BAG_UPDATE_DELAYED" or event == "BAG_UPDATE_COOLDOWN" or event == "SPELL_UPDATE_COOLDOWN" then
-        if CB.UpdateActionVisuals then CB:UpdateActionVisuals() end
+        if CB.QueueVisualRefresh then CB:QueueVisualRefresh() end
     elseif event == "SPELLS_CHANGED" then
-        if not (InCombatLockdown and InCombatLockdown()) and CB.RefreshBars then
+        if InCombatLockdown and InCombatLockdown() then
+            CB.pendingBarRefresh = true
+        elseif CB.RefreshBars then
             CB:RefreshBars()
         end
     end
