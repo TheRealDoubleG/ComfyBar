@@ -1,5 +1,12 @@
 # ComfyBar Changelog
 
+## 0.8 Beta – 27.09.2026
+- Changed ComfyBar's default bar anchor from the bottom-right of the screen to the screen center.
+- Default bars are now stacked in the lower-middle area for a more natural starting position.
+- Added a safe migration for bars that were still sitting exactly on the old default bottom-right positions; manually moved bars are left untouched.
+- "Reset position" now resets the selected bar to the new centered default position.
+
+
 ## 0.7 Beta – 27.09.2026
 - Matched the Info-tab footer wording to OnPoint's family style.
 - Footer now thanks users for using ComfyBar and invites feedback and bug reports via Discord.

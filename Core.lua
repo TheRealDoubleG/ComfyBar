@@ -4,7 +4,7 @@ ComfyBar = ComfyBar or {}
 local CB = ComfyBar
 
 CB.name = ADDON_NAME or "ComfyBar"
-CB.version = "0.7"
+CB.version = "0.8"
 CB.buildDate = "27.09.2026"
 CB.status = "Beta"
 CB.gameVersion = "WoW Forever 1.60.1"
@@ -16,11 +16,11 @@ CB.github = "https://github.com/TheRealDoubleG/ComfyBar"
 CB.editMode = false
 
 CB.defaultBarPositions = {
-    utility = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 220},
-    buffs = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 170},
-    consumables = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 120},
-    professions = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 70},
-    racials = {point = "BOTTOMRIGHT", relativePoint = "BOTTOMRIGHT", x = -420, y = 20},
+    utility = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -80},
+    buffs = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -130},
+    consumables = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -180},
+    professions = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -230},
+    racials = {point = "CENTER", relativePoint = "CENTER", x = 0, y = -280},
 }
 
 local defaults = {
@@ -43,10 +43,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "BOTTOMRIGHT",
-            relativePoint = "BOTTOMRIGHT",
-            x = -420,
-            y = 120,
+            point = "CENTER",
+            relativePoint = "CENTER",
+            x = 0,
+            y = -180,
             hideInCombat = true,
             actions = {},
         },
@@ -55,10 +55,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "BOTTOMRIGHT",
-            relativePoint = "BOTTOMRIGHT",
-            x = -420,
-            y = 170,
+            point = "CENTER",
+            relativePoint = "CENTER",
+            x = 0,
+            y = -130,
             hideInCombat = true,
             actions = {},
         },
@@ -67,10 +67,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "BOTTOMRIGHT",
-            relativePoint = "BOTTOMRIGHT",
-            x = -420,
-            y = 220,
+            point = "CENTER",
+            relativePoint = "CENTER",
+            x = 0,
+            y = -80,
             hideInCombat = true,
             actions = {
                 {kind = "item", itemID = 6948, label = "Hearthstone"},
@@ -81,10 +81,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "BOTTOMRIGHT",
-            relativePoint = "BOTTOMRIGHT",
-            x = -420,
-            y = 70,
+            point = "CENTER",
+            relativePoint = "CENTER",
+            x = 0,
+            y = -230,
             hideInCombat = true,
             actions = {},
         },
@@ -93,10 +93,10 @@ local defaults = {
             orientation = "HORIZONTAL",
             scale = 1.00,
             spacing = 4,
-            point = "BOTTOMRIGHT",
-            relativePoint = "BOTTOMRIGHT",
-            x = -420,
-            y = 20,
+            point = "CENTER",
+            relativePoint = "CENTER",
+            x = 0,
+            y = -280,
             hideInCombat = false,
             actions = {},
         },
@@ -148,6 +148,34 @@ function CB:GetCompatibilityStatus()
     return false, self:T("COMPAT_UPDATE_REQUIRED")
 end
 
+local legacyBarPositions = {
+    utility = {point = "BOTTOMRIGHT", x = -420, y = 220},
+    buffs = {point = "BOTTOMRIGHT", x = -420, y = 170},
+    consumables = {point = "BOTTOMRIGHT", x = -420, y = 120},
+    professions = {point = "BOTTOMRIGHT", x = -420, y = 70},
+    racials = {point = "BOTTOMRIGHT", x = -420, y = 20},
+}
+
+function CB:MigrateLegacyBarAnchors()
+    if not self.db or not self.db.bars then return end
+
+    for key, oldPos in pairs(legacyBarPositions) do
+        local cfg = self.db.bars[key]
+        local newPos = self.defaultBarPositions[key]
+        if cfg and newPos
+            and cfg.point == oldPos.point
+            and (cfg.relativePoint == nil or cfg.relativePoint == oldPos.point)
+            and tonumber(cfg.x) == oldPos.x
+            and tonumber(cfg.y) == oldPos.y then
+
+            cfg.point = newPos.point
+            cfg.relativePoint = newPos.relativePoint
+            cfg.x = newPos.x
+            cfg.y = newPos.y
+        end
+    end
+end
+
 function CB:InitializeDB()
     if type(ComfyBarDB) ~= "table" then
         ComfyBarDB = CopyTable(defaults)
@@ -155,6 +183,7 @@ function CB:InitializeDB()
         ApplyDefaults(ComfyBarDB, defaults)
     end
     self.db = ComfyBarDB
+    self:MigrateLegacyBarAnchors()
     self.editMode = false
 end
 
@@ -162,8 +191,8 @@ function CB:ResetBarPosition(key)
     if not self.db or not self.db.bars[key] then return end
     local pos = self.defaultBarPositions[key]
     if not pos then return end
-    self.db.bars[key].point = pos.point or "BOTTOMRIGHT"
-    self.db.bars[key].relativePoint = pos.relativePoint or pos.point or "BOTTOMRIGHT"
+    self.db.bars[key].point = pos.point or "CENTER"
+    self.db.bars[key].relativePoint = pos.relativePoint or pos.point or "CENTER"
     self.db.bars[key].x = pos.x
     self.db.bars[key].y = pos.y
     if self.RefreshBars then self:RefreshBars() end
