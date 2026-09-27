@@ -351,6 +351,11 @@ function CB:InitializeOptions()
     addonName:SetPoint("TOPLEFT", 28, -26)
     addonName:SetText("ComfyBar")
 
+    local familyBadge = infoBox:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+    familyBadge:SetPoint("TOPRIGHT", -28, -30)
+    familyBadge:SetText("Comfy Suite")
+    familyBadge:SetTextColor(1.00, 0.82, 0.00)
+
     local tagline = infoBox:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     tagline:SetPoint("TOPLEFT", addonName, "BOTTOMLEFT", 0, -7)
     tagline:SetWidth(620)

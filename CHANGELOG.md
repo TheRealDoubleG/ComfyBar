@@ -1,5 +1,12 @@
 # ComfyBar Changelog
 
+## 0.9 Beta – 27.09.2026
+- Adopted the shared Comfy Suite UI standard.
+- Added the Comfy Suite badge to the Info tab.
+- Added Comfy Suite metadata to the TOC for family identification.
+- Standardized the Info-tab structure and family styling with OnPoint, ComfyCC and ComfyHub.
+
+
 ## 0.8 Beta – 27.09.2026
 - Changed ComfyBar's default bar anchor from the bottom-right of the screen to the screen center.
 - Default bars are now stacked in the lower-middle area for a more natural starting position.
