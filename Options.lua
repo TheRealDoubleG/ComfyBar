@@ -263,7 +263,7 @@ function CB:InitializeOptions()
         end,
         function(v) return string.format("%d%%", v) end)
 
-    CreateSlider(bars, self:T("SPACING"), 0, 12, 1, 35, -385,
+    CreateSlider(bars, self:T("SPACING"), 0, 30, 1, 35, -385,
         function() return CB.db.bars[selectedBar].spacing or 4 end,
         function(v)
             if InCombatLockdown and InCombatLockdown() then return end

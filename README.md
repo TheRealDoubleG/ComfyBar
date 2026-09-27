@@ -1,6 +1,6 @@
 # ComfyBar
 
-**Version 0.2 – Beta**  
+**Version 0.3 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
@@ -20,7 +20,7 @@ The first beta establishes the common framework:
 - Separate bars for **Consumables**, **Buffs**, **Utility**, **Professions & Scrolls** and **Racials**.
 - Each bar can be enabled independently.
 - Horizontal or vertical layout.
-- Per-bar scale and button spacing.
+- Per-bar scale and adjustable icon spacing (0–30 px).
 - Freely movable bars while edit mode is enabled.
 - Bars are locked during normal use.
 - A **+ slot** appears only in edit mode.
@@ -72,7 +72,7 @@ World of Warcraft\Interface\AddOns\ComfyBar\ComfyBar.toc
 
 ## Development status
 
-ComfyBar is currently **Beta**. The 0.1 release is the foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
+ComfyBar is currently **Beta**. The 0.3 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
 
 ---
 
@@ -84,4 +84,4 @@ Die wichtigste Regel lautet:
 
 **Eine Eingabe des Spielers = höchstens eine Spielaktion.**
 
-Die Beta 0.1 liefert zunächst das stabile Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.
+Die Beta 0.3 liefert das aktuelle Test-Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.

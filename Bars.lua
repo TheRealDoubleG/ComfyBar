@@ -188,12 +188,13 @@ function CB:CreateActionButton(barKey, action, index)
     button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
 
     local icon = button:CreateTexture(nil, "ARTWORK")
-    icon:SetPoint("TOPLEFT", 3, -3)
-    icon:SetPoint("BOTTOMRIGHT", -3, 3)
+    icon:SetPoint("TOPLEFT", 1, -1)
+    icon:SetPoint("BOTTOMRIGHT", -1, 1)
     icon:SetTexCoord(0.07, 0.93, 0.07, 0.93)
     button.icon = icon
 
-    button:SetNormalTexture("Interface\\Buttons\\UI-Quickslot2")
+    -- Clean icon-only look in normal use. The old Quickslot normal texture
+    -- created an extra small square behind every icon.
     button:SetPushedTexture("Interface\\Buttons\\UI-Quickslot-Depress")
     button:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square", "ADD")
 

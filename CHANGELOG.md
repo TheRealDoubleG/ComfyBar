@@ -1,5 +1,11 @@
 # ComfyBar Changelog
 
+## 0.3 Beta – 27.09.2026
+- Removed the permanent Quickslot background squares from normal action buttons for a cleaner icon-only look.
+- Increased the visible icon area inside each action button.
+- Renamed the spacing control to Icon spacing / Icon-Abstand and expanded its range to 0–30 px per bar.
+
+
 ## 0.2 Beta – 27.09.2026
 - Fixed the minimap tracking-border anchor so the gold ring is correctly centered around the icon instead of appearing detached.
 
