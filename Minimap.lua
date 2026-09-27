@@ -1,5 +1,19 @@
-ComfyBar = ComfyBar or {}
-local CB = ComfyBar
+ComfyBar = ComfyBar or {}\nlocal CB = ComfyBar
+
+local function HubWantsBundled()
+    local hub = rawget(_G, "ComfyHub")
+    if type(hub) ~= "table" then return false end
+
+    if type(hub.IsMinimapBundlingActive) == "function" then
+        local ok, bundled = pcall(hub.IsMinimapBundlingActive, hub)
+        if ok then return bundled and true or false end
+    end
+
+    return hub.db
+        and hub.db.minimap
+        and hub.db.minimap.show
+        and hub.db.minimap.bundleSuiteIcons ~= false
+end
 
 local function GetButtonRadius(button)
     if not Minimap then return 95 end
@@ -20,10 +34,22 @@ local function PositionFromAngle(button, angle)
     button:SetPoint("CENTER", Minimap, "CENTER", x, y)
 end
 
+function CB:SetMinimapBundled(bundled)
+    self.minimapBundled = bundled and true or false
+    if self.minimapButton and self.db then
+        self:UpdateMinimapPosition()
+    end
+end
+
+function CB:ShouldShowMinimapButton()
+    if not self.db or not self.db.minimap then return false end
+    return self.db.minimap.show and not self.minimapBundled and not HubWantsBundled()
+end
+
 function CB:UpdateMinimapPosition()
     if not self.minimapButton or not self.db then return end
     PositionFromAngle(self.minimapButton, self.db.minimap.angle)
-    self.minimapButton:SetShown(self.db.minimap.show)
+    self.minimapButton:SetShown(self:ShouldShowMinimapButton())
 end
 
 function CB:UpdateMinimapAppearance()
@@ -97,9 +123,8 @@ function CB:InitializeMinimap()
             local scale = UIParent:GetEffectiveScale()
             if scale and scale > 0 then
                 cx, cy = cx / scale, cy / scale
-                local angle = math.deg(math.atan2(cy - my, cx - mx))
-                CB.db.minimap.angle = angle
-                PositionFromAngle(btn, angle)
+                CB.db.minimap.angle = math.deg(math.atan2(cy - my, cx - mx))
+                PositionFromAngle(btn, CB.db.minimap.angle)
             end
         end)
     end)
@@ -109,6 +134,6 @@ function CB:InitializeMinimap()
     end)
 
     self.minimapButton = button
+    self.minimapBundled = HubWantsBundled()
     self:UpdateMinimapPosition()
-    self:UpdateMinimapAppearance()
-end
+    self:UpdateMinimapAppearance()\nend
