@@ -1,5 +1,10 @@
 # ComfyBar Changelog
 
+## 0.10 Beta – 27.09.2026
+- Updated current documentation to the renamed **ComfyOnPoint** addon.
+- Kept ComfyBar naming and family references aligned with the Comfy Suite.
+
+
 ## 0.9 Beta – 27.09.2026
 - Adopted the shared Comfy Suite UI standard.
 - Added the Comfy Suite badge to the Info tab.
