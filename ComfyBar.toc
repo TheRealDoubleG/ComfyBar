@@ -1,6 +1,6 @@
-## Title: ComfyMage
-## Notes: Comfort and quality-of-life addon for Mage on WoW Forever
+## Title: ComfyBar
+## Notes: Customizable utility bars for buffs, consumables, professions, racials and more on WoW Forever.
 ## Author: TheRealDoubleG
-## Version: 1.0
+## Version: 0.1 Beta
 
 Core.lua
