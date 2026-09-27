@@ -11,6 +11,18 @@ local function IsLockedDown()
     return InCombatLockdown and InCombatLockdown()
 end
 
+local function IsSecretValue(value)
+    if type(issecretvalue) == "function" then
+        local ok, secret = pcall(issecretvalue, value)
+        if ok then return secret and true or false end
+    end
+    if type(canaccessvalue) == "function" then
+        local ok, accessible = pcall(canaccessvalue, value)
+        if ok then return not accessible end
+    end
+    return false
+end
+
 local function GetItemCountSafe(itemID)
     if C_Item and type(C_Item.GetItemCount) == "function" then
         local ok, count = pcall(C_Item.GetItemCount, itemID, false, false, false, false)
@@ -81,7 +93,29 @@ end
 
 local function SetCooldown(cooldown, startTime, duration, enable)
     if not cooldown then return end
-    if enable ~= 0 and duration and duration > 0 and startTime and startTime > 0 then
+
+    -- WoW can return protected/secret cooldown values. Addons may pass those
+    -- values to the Cooldown widget, but must not compare them in Lua.
+    if IsSecretValue(startTime) or IsSecretValue(duration) or IsSecretValue(enable) then
+        local ok = pcall(cooldown.SetCooldown, cooldown, startTime, duration)
+        if ok then
+            cooldown:Show()
+        else
+            cooldown:Clear()
+            cooldown:Hide()
+        end
+        return
+    end
+
+    local active = false
+    local ok, result = pcall(function()
+        return enable ~= 0
+            and duration ~= nil and duration > 0
+            and startTime ~= nil and startTime > 0
+    end)
+    if ok then active = result and true or false end
+
+    if active then
         cooldown:SetCooldown(startTime, duration)
         cooldown:Show()
     else
@@ -130,13 +164,22 @@ function CB:UpdateActionButton(button)
     if action.kind == "item" and action.itemID then
         icon = GetItemIconSafe(action.itemID)
         local itemCount = GetItemCountSafe(action.itemID)
-        if itemCount and itemCount > 1 then count = tostring(itemCount) end
-        startTime, duration, enable = GetItemCooldownSafe(action.itemID)
-        if button.icon then
-            button.icon:SetDesaturated(itemCount == 0)
-            local shade = itemCount == 0 and 0.55 or 1
-            button.icon:SetVertexColor(shade, shade, shade)
+        if not IsSecretValue(itemCount) then
+            local okCount, numericCount = pcall(tonumber, itemCount)
+            numericCount = okCount and numericCount or nil
+            if numericCount and numericCount > 1 then count = tostring(numericCount) end
+            if button.icon then
+                local empty = numericCount == 0
+                button.icon:SetDesaturated(empty)
+                local shade = empty and 0.55 or 1
+                button.icon:SetVertexColor(shade, shade, shade)
+            end
+        elseif button.icon then
+            -- Secret counts cannot be inspected safely; leave the icon neutral.
+            button.icon:SetDesaturated(false)
+            button.icon:SetVertexColor(1, 1, 1)
         end
+        startTime, duration, enable = GetItemCooldownSafe(action.itemID)
     elseif action.kind == "spell" then
         local _, spellIcon = GetSpellInfoSafe(action.spellID or action.spellName)
         if spellIcon then icon = spellIcon end
