@@ -207,11 +207,13 @@ function CB:UpdateActionVisuals()
 end
 
 local function ConfigureSecureAction(button, action)
-    if IsLockedDown() then return end
+    if IsLockedDown() then return false end
 
     button:SetAttribute("type1", nil)
     button:SetAttribute("spell", nil)
     button:SetAttribute("item", nil)
+
+    if not action then return true end
 
     if action.kind == "item" and action.itemID then
         button:SetAttribute("type1", "item")
@@ -220,15 +222,17 @@ local function ConfigureSecureAction(button, action)
         button:SetAttribute("type1", "spell")
         button:SetAttribute("spell", action.spellID or action.spellName)
     end
+    return true
 end
 
-function CB:CreateActionButton(barKey, action, index)
+function CB:CreateActionButtonFrame(barKey)
     local bar = self.bars[barKey]
     if not bar then return nil end
 
     local button = CreateFrame("Button", nil, bar, "SecureActionButtonTemplate")
     button:SetSize(BUTTON_SIZE, BUTTON_SIZE)
     button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+    button.barKey = barKey
 
     local icon = button:CreateTexture(nil, "ARTWORK")
     icon:SetPoint("TOPLEFT", 1, -1)
@@ -249,16 +253,11 @@ function CB:CreateActionButton(barKey, action, index)
     count:SetPoint("BOTTOMRIGHT", -3, 3)
     button.count = count
 
-    button.action = action
-    button.actionIndex = index
-    button.barKey = barKey
-
-    ConfigureSecureAction(button, action)
-    self:UpdateActionButton(button)
-
     button:SetScript("OnEnter", function(self)
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         local a = self.action
+        if not a then return end
+
+        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
         if a.kind == "item" and a.itemID then
             if GameTooltip.SetItemByID then
                 GameTooltip:SetItemByID(a.itemID)
@@ -286,12 +285,70 @@ function CB:CreateActionButton(barKey, action, index)
     end)
 
     button:SetScript("PostClick", function(self, mouseButton)
-        if mouseButton == "RightButton" and CB.editMode and not IsLockedDown() then
+        if mouseButton == "RightButton" and CB.editMode and not IsLockedDown() and self.actionIndex then
             CB:RemoveAction(self.barKey, self.actionIndex)
         end
     end)
 
+    button:Hide()
     return button
+end
+
+function CB:AcquireActionButton(barKey, action, index)
+    if IsLockedDown() then return nil end
+
+    local bar = self.bars[barKey]
+    if not bar then return nil end
+
+    bar.buttonPool = bar.buttonPool or {}
+    local button
+
+    for _, candidate in ipairs(bar.buttonPool) do
+        if not candidate.__ComfyInUse then
+            button = candidate
+            break
+        end
+    end
+
+    if not button then
+        button = self:CreateActionButtonFrame(barKey)
+        if not button then return nil end
+        table.insert(bar.buttonPool, button)
+    end
+
+    button.__ComfyInUse = true
+    button.action = action
+    button.actionIndex = index
+    button.barKey = barKey
+
+    ConfigureSecureAction(button, action)
+    self:UpdateActionButton(button)
+    button:Show()
+    return button
+end
+
+function CB:ReleaseActionButtons(bar)
+    if not bar then return end
+
+    for _, button in ipairs(bar.buttonPool or {}) do
+        button.__ComfyInUse = false
+        button.action = nil
+        button.actionIndex = nil
+        button:Hide()
+
+        if button.count then button.count:SetText("") end
+        if button.cooldown then
+            button.cooldown:Clear()
+            button.cooldown:Hide()
+        end
+    end
+
+    bar.actionButtons = {}
+end
+
+-- Compatibility wrapper for older internal integrations.
+function CB:CreateActionButton(barKey, action, index)
+    return self:AcquireActionButton(barKey, action, index)
 end
 
 function CB:ReadCursorAction()
@@ -484,6 +541,7 @@ function CB:CreateBar(key)
     end)
 
     frame.actionButtons = {}
+    frame.buttonPool = {}
     self.bars[key] = frame
     self:CreatePlusButton(key)
     return frame
@@ -586,21 +644,18 @@ function CB:UpdateEditVisuals(key)
 end
 
 function CB:RebuildBar(key)
-    if IsLockedDown() then return end
+    if IsLockedDown() then
+        self.pendingBarRefresh = true
+        return false
+    end
 
     local bar = self:CreateBar(key)
     local cfg = self.db.bars[key]
-
-    for _, button in ipairs(bar.actionButtons or {}) do
-        button:Hide()
-        button:SetParent(nil)
-    end
-    bar.actionButtons = {}
+    self:ReleaseActionButtons(bar)
 
     for index, action in ipairs(cfg.actions or {}) do
-        local button = self:CreateActionButton(key, action, index)
+        local button = self:AcquireActionButton(key, action, index)
         if button then
-            button:Show()
             table.insert(bar.actionButtons, button)
         end
     end
@@ -609,19 +664,23 @@ function CB:RebuildBar(key)
     self:UpdateEditVisuals(key)
     self:LayoutBar(key)
     self:ApplyBarVisibility(key)
+    return true
 end
 
 function CB:RefreshBars()
-    if not self.db then return end
+    if not self.db then return false end
 
     if IsLockedDown() then
+        self.pendingBarRefresh = true
         self:UpdateActionVisuals()
-        return
+        return false
     end
 
+    self.pendingBarRefresh = false
     for _, key in ipairs(self.barOrder) do
         self:RebuildBar(key)
     end
+    return true
 end
 
 function CB:OnCombatStart()
