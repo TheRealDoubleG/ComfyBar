@@ -1,6 +1,6 @@
 # ComfyBar
 
-**Version 0.11 – Beta**  
+**Version 0.12 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
@@ -33,11 +33,14 @@ The first beta establishes the common framework:
 - Built-in presets: **Minimal**, **Preferred**, **Complete**.
 - ComfyOnPoint-style settings window and minimap behavior.
 - Saved settings-window position with its own default location, so ComfyBar and ComfyOnPoint no longer open directly on top of each other.
-- Each bar keeps its own full UI anchor/position and now uses the screen center as its default anchor, with the bars stacked in the lower-middle area.
+- Each bar keeps its own full UI anchor/position and uses a compact centered stack slightly below the character as its default position.
+- Saved spell actions are isolated by character profile so one character does not inherit another character's class spells.
 - Minimap button: left click toggles ComfyBar, right click opens settings, drag moves it when unlocked.
 - Left-click toggle now prints a chat message confirming whether ComfyBar is enabled or disabled, matching ComfyOnPoint's behavior.
 - German UI on a German client, English otherwise.
 - Info tab with addon version, build date, client build/interface, author, Discord and compatibility state.
+- Shared **Settings** tab immediately before Info with automatic character profiles, account/custom profiles, copy-from-character, window lock/opacity, optional border/minimal background and minimap presentation controls.
+- The older Minimal/Preferred/Complete feature profiles are now labeled **Presets / Voreinstellungen** to distinguish them from saved character profiles.
 
 ## Planned smart modules
 
