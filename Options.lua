@@ -106,7 +106,8 @@ local function SelectTab(index)
     local frame = CB.optionsFrame
     if not frame then return end
     for i, tab in ipairs(frame.tabs) do
-        tab:SetEnabled(i ~= index)
+        tab:SetEnabled(true)
+        tab:SetButtonState(i == index and "PUSHED" or "NORMAL", i == index)
         frame.pages[i]:SetShown(i == index)
     end
 end
@@ -136,6 +137,7 @@ function CB:RefreshOptions()
     if self.profileStatus then
         self.profileStatus:SetText(self.db.selectedProfile or "Bevorzugt")
     end
+    if self.RefreshSharedSettingsPage then self:RefreshSharedSettingsPage() end
 end
 
 function CB:InitializeOptions()
@@ -158,6 +160,7 @@ function CB:InitializeOptions()
     frame:RegisterForDrag("LeftButton")
     frame:SetScript("OnMouseDown", function(self) self:Raise() end)
     frame:SetScript("OnDragStart", function(self)
+        if CB:IsOptionsWindowLocked() then return end
         self:Raise()
         self:StartMoving()
     end)
@@ -178,7 +181,7 @@ function CB:InitializeOptions()
     frame.tabs = {}
     frame.pages = {}
 
-    local tabNames = {self:T("TAB_GENERAL"), self:T("TAB_BARS"), self:T("TAB_PROFILES"), self:T("TAB_INFO")}
+    local tabNames = {self:T("TAB_GENERAL"), self:T("TAB_BARS"), self:T("TAB_PROFILES"), self:GetSharedSettingsTabLabel(), self:T("TAB_INFO")}
     for i, label in ipairs(tabNames) do
         local tab = CreateButton(frame, label, 18 + (i - 1) * 120, -35, 110, function() SelectTab(i) end)
         frame.tabs[i] = tab
@@ -208,16 +211,16 @@ function CB:InitializeOptions()
     editHelp:SetJustifyH("LEFT")
     editHelp:SetText(self:T("EDIT_HINT"))
 
-    CreateCheck(general, self:T("MINIMAP_SHOW"), 20, -180,
-        function() return CB.db.minimap.show end,
-        function(v) CB.db.minimap.show = v CB:UpdateMinimapPosition() end)
-
-    CreateCheck(general, self:T("MINIMAP_LOCK"), 20, -215,
-        function() return CB.db.minimap.locked end,
-        function(v) CB.db.minimap.locked = v end)
+    local settingsHint = general:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    settingsHint:SetPoint("TOPLEFT", 20, -180)
+    settingsHint:SetWidth(630)
+    settingsHint:SetJustifyH("LEFT")
+    settingsHint:SetText((GetLocale and GetLocale() == "deDE")
+        and "Minimap, Fensterdarstellung und Charakterprofile findest du im Reiter Einstellungen."
+        or "Minimap, window appearance and character profiles are now in the Settings tab.")
 
     local commands = general:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-    commands:SetPoint("TOPLEFT", 20, -280)
+    commands:SetPoint("TOPLEFT", 20, -245)
     commands:SetText("/comfybar  ·  /cb  ·  /cb unlock  ·  /cb lock")
 
     local bars = frame.pages[2]
@@ -330,7 +333,10 @@ function CB:InitializeOptions()
     self.profileStatus = profiles:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     self.profileStatus:SetPoint("LEFT", currentLabel, "RIGHT", 8, 0)
 
-    local infoPage = frame.pages[4]
+    local settingsPage = frame.pages[4]
+    self:BuildSharedSettingsPage(settingsPage)
+
+    local infoPage = frame.pages[5]
     local ititle = infoPage:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     ititle:SetPoint("TOPLEFT", 20, -10)
     ititle:SetText(self:T("INFO_TITLE"))
@@ -428,25 +434,29 @@ function CB:InitializeOptions()
     InfoRow(self:T("INFO_COMMANDS"), "/comfybar  ·  /cb", -328)
 
     local notice = infoBox:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-    notice:SetPoint("TOPLEFT", 28, -360)
+    notice:SetPoint("TOPLEFT", 28, -345)
     notice:SetWidth(620)
+    notice:SetHeight(42)
     notice:SetJustifyH("LEFT")
+    notice:SetJustifyV("TOP")
     notice:SetText(self:T("INFO_NOTICE"))
 
     local copyright = infoBox:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-    copyright:SetPoint("BOTTOMLEFT", 28, 68)
+    copyright:SetPoint("BOTTOMLEFT", 28, 48)
     copyright:SetText("© 2026 TheRealDoubleG")
 
     local thanks = infoBox:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-    thanks:SetPoint("BOTTOMLEFT", 28, 28)
+    thanks:SetPoint("BOTTOMLEFT", 28, 16)
     thanks:SetWidth(620)
     thanks:SetJustifyH("LEFT")
     thanks:SetText(self:T("INFO_THANKS"))
 
     frame:SetScript("OnShow", function()
+        CB:ApplySharedWindowSettings()
         CB:RefreshOptions()
     end)
 
+    self:ApplySharedWindowSettings()
     SelectTab(1)
 
     if Settings and Settings.RegisterCanvasLayoutCategory and Settings.RegisterAddOnCategory then
