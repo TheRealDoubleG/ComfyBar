@@ -1,6 +1,6 @@
 # ComfyBar
 
-**Version 0.14 – Beta**  
+**Version 0.15 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
