@@ -1,5 +1,15 @@
 # ComfyBar Changelog
 
+## 0.14 Beta – 27.09.2026
+- Reworked action-button lifecycle to reuse a per-bar secure button pool instead of discarding and recreating SecureActionButtonTemplate frames on every refresh.
+- Structural bar rebuilds requested during combat are now deferred and flushed after PLAYER_REGEN_ENABLED.
+- Added a short visual-refresh coalescer for bag and spell cooldown event bursts to reduce duplicate work.
+- SPELLS_CHANGED received during combat now schedules a safe post-combat rebuild instead of being silently ignored.
+- Added a selectable **template for new characters**. New character profiles can start from clean ComfyBar defaults, the account profile, another known character, or a named custom profile.
+- Template-based character profiles are copied, not linked, so each character remains independent; unknown class spells are still pruned for the new character.
+- No Retail/Midnight/Classic-specific action-bar systems were introduced; ComfyBar remains targeted specifically at WoW: Forever.
+
+
 ## 0.13 Beta – 27.09.2026
 - Fixed the repeating `Bars.lua:84` Lua error caused by comparing WoW protected/secret cooldown duration values.
 - Secret cooldown values are now passed directly to the native Cooldown widget instead of being inspected in addon Lua.
