@@ -195,8 +195,19 @@ function CB:GetCopySourceStorageProfiles()
     return list
 end
 
+function CB:ApplyStoredOptionsWindowPosition()
+    if not self.optionsFrame or not self.db then return end
+    local saved = self.db.optionsWindow
+    if type(saved) ~= "table" then return end
+    local point = saved.point or "CENTER"
+    local relativePoint = saved.relativePoint or point
+    self.optionsFrame:ClearAllPoints()
+    self.optionsFrame:SetPoint(point, UIParent, relativePoint, saved.x or 0, saved.y or 0)
+end
+
 function CB:NotifyStorageProfileChanged()
     self:EnsureSharedUISettings()
+    if self.ApplyStoredOptionsWindowPosition then self:ApplyStoredOptionsWindowPosition() end
     if self.ApplySharedWindowSettings then self:ApplySharedWindowSettings() end
     if self.UpdateMinimapPosition then self:UpdateMinimapPosition() end
     if self.UpdateMinimapAppearance then self:UpdateMinimapAppearance() end
@@ -229,6 +240,8 @@ function CB:CopyStorageProfileToCharacter(sourceKey)
     local character = self:GetCharacterStorageKey()
     self.profileRoot.activeByCharacter[character] = targetKey
     self.db = self.profileRoot.profiles[targetKey]
+    self.db._characterSpellPruneVersion = nil
+    if self.PruneForeignCharacterSpells then self:PruneForeignCharacterSpells() end
     self:NotifyStorageProfileChanged()
     return true
 end
