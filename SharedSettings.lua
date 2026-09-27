@@ -79,6 +79,7 @@ function CB:InitializeProfileStorage(defaults, savedVariableName)
             characters = {},
             activeByCharacter = {},
             nextCustomId = 1,
+            newCharacterTemplate = "defaults",
         }
 
         root.profiles.account = DeepCopy(legacy)
@@ -101,6 +102,7 @@ function CB:InitializeProfileStorage(defaults, savedVariableName)
     root.characters = type(root.characters) == "table" and root.characters or {}
     root.activeByCharacter = type(root.activeByCharacter) == "table" and root.activeByCharacter or {}
     root.nextCustomId = tonumber(root.nextCustomId) or 1
+    root.newCharacterTemplate = root.newCharacterTemplate or "defaults"
 
     if type(root.profiles.account) ~= "table" then root.profiles.account = DeepCopy(defaults or {}) end
     ApplyDefaults(root.profiles.account, defaults or {})
@@ -110,7 +112,15 @@ function CB:InitializeProfileStorage(defaults, savedVariableName)
     local character = self:GetCharacterStorageKey()
     local characterKey = "character:" .. character
     if type(root.profiles[characterKey]) ~= "table" then
-        root.profiles[characterKey] = DeepCopy(defaults or {})
+        local templateKey = root.newCharacterTemplate
+        local templateProfile = templateKey ~= "defaults" and root.profiles[templateKey] or nil
+        if type(templateProfile) == "table" then
+            root.profiles[characterKey] = DeepCopy(templateProfile)
+        else
+            root.newCharacterTemplate = "defaults"
+            root.profiles[characterKey] = DeepCopy(defaults or {})
+        end
+        root.profiles[characterKey]._characterSpellPruneVersion = nil
     end
     ApplyDefaults(root.profiles[characterKey], defaults or {})
     root.labels[characterKey] = character
@@ -193,6 +203,59 @@ function CB:GetCopySourceStorageProfiles()
     table.sort(custom, function(a, b) return tostring(a.text):lower() < tostring(b.text):lower() end)
     for _, entry in ipairs(custom) do list[#list + 1] = entry end
     return list
+end
+
+function CB:GetNewCharacterTemplateProfiles()
+    if not self.profileRoot then return {{value = "defaults", text = L("ComfyBar-Standard", "ComfyBar defaults")}} end
+
+    local list = {
+        {value = "defaults", text = L("ComfyBar-Standard", "ComfyBar defaults")},
+        {value = "account", text = L("Account-Profil", "Account profile")},
+    }
+
+    local characters = {}
+    for character, key in pairs(self.profileRoot.characters or {}) do
+        if self.profileRoot.profiles[key] then
+            characters[#characters + 1] = {
+                value = key,
+                text = L("Charakter: ", "Character: ") .. character,
+            }
+        end
+    end
+    table.sort(characters, function(a, b) return tostring(a.text):lower() < tostring(b.text):lower() end)
+    for _, entry in ipairs(characters) do list[#list + 1] = entry end
+
+    local custom = {}
+    for key, kind in pairs(self.profileRoot.kinds or {}) do
+        if kind == "custom" and self.profileRoot.profiles[key] then
+            custom[#custom + 1] = {
+                value = key,
+                text = L("Eigenes Profil: ", "Custom profile: ") .. (self.profileRoot.labels[key] or key),
+            }
+        end
+    end
+    table.sort(custom, function(a, b) return tostring(a.text):lower() < tostring(b.text):lower() end)
+    for _, entry in ipairs(custom) do list[#list + 1] = entry end
+
+    return list
+end
+
+function CB:GetNewCharacterTemplateKey()
+    if not self.profileRoot then return "defaults" end
+    local key = self.profileRoot.newCharacterTemplate or "defaults"
+    if key ~= "defaults" and type(self.profileRoot.profiles[key]) ~= "table" then
+        key = "defaults"
+        self.profileRoot.newCharacterTemplate = key
+    end
+    return key
+end
+
+function CB:SetNewCharacterTemplateKey(key)
+    if not self.profileRoot then return false end
+    if key ~= "defaults" and type(self.profileRoot.profiles[key]) ~= "table" then return false end
+    self.profileRoot.newCharacterTemplate = key
+    if self.RefreshSharedSettingsPage then self:RefreshSharedSettingsPage() end
+    return true
 end
 
 function CB:ApplyStoredOptionsWindowPosition()
@@ -279,6 +342,9 @@ function CB:DeleteActiveStorageProfile()
     self.profileRoot.profiles[key] = nil
     self.profileRoot.labels[key] = nil
     self.profileRoot.kinds[key] = nil
+    if self.profileRoot.newCharacterTemplate == key then
+        self.profileRoot.newCharacterTemplate = "defaults"
+    end
 
     local character = self:GetCharacterStorageKey()
     local targetKey = self:GetCharacterProfileKey()
@@ -486,6 +552,13 @@ function CB:BuildSharedSettingsPage(page)
     end)
 
     AddText(L("Eigenes Profil", "Custom profile"), 20, -145, "GameFontHighlightSmall")
+
+    AddText(L("Vorlage für neue Charaktere", "Template for new characters"), 330, -145, "GameFontHighlightSmall")
+    self.sharedNewCharacterTemplateDropdown = AddDropdown(315, -157, 250,
+        function() return CB:GetNewCharacterTemplateProfiles() end,
+        function() return CB:GetNewCharacterTemplateKey() end,
+        function(value) CB:SetNewCharacterTemplateKey(value) end)
+
     self.sharedProfileNameEdit = CreateFrame("EditBox", nil, page, "InputBoxTemplate")
     self.sharedProfileNameEdit:SetPoint("TOPLEFT", 20, -164)
     self.sharedProfileNameEdit:SetSize(220, 28)
@@ -574,4 +647,5 @@ function CB:RefreshSharedSettingsPage()
 
     if self.sharedActiveProfileDropdown and self.sharedActiveProfileDropdown._refresh then self.sharedActiveProfileDropdown._refresh() end
     if self.sharedCopyDropdown and self.sharedCopyDropdown._refresh then self.sharedCopyDropdown._refresh() end
+    if self.sharedNewCharacterTemplateDropdown and self.sharedNewCharacterTemplateDropdown._refresh then self.sharedNewCharacterTemplateDropdown._refresh() end
 end
