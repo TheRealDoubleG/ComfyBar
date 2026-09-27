@@ -1,6 +1,6 @@
 # ComfyBar
 
-**Version 0.5 – Beta**  
+**Version 0.6 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
@@ -35,6 +35,7 @@ The first beta establishes the common framework:
 - Saved settings-window position with its own default location, so ComfyBar and OnPoint no longer open directly on top of each other.
 - Each bar keeps its own full UI anchor/position and uses a separate bottom-right default position.
 - Minimap button: left click toggles ComfyBar, right click opens settings, drag moves it when unlocked.
+- Left-click toggle now prints a chat message confirming whether ComfyBar is enabled or disabled, matching OnPoint's behavior.
 - German UI on a German client, English otherwise.
 - Info tab with addon version, build date, client build/interface, author, Discord and compatibility state.
 
@@ -75,7 +76,7 @@ World of Warcraft\Interface\AddOns\ComfyBar\ComfyBar.toc
 
 ## Development status
 
-ComfyBar is currently **Beta**. The 0.5 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
+ComfyBar is currently **Beta**. The 0.6 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
 
 ---
 
@@ -87,4 +88,4 @@ Die wichtigste Regel lautet:
 
 **Eine Eingabe des Spielers = höchstens eine Spielaktion.**
 
-Die Beta 0.5 liefert das aktuelle Test-Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.
+Die Beta 0.6 liefert das aktuelle Test-Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.

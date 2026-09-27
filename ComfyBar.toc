@@ -3,7 +3,7 @@
 ## Notes: Customizable utility bars for buffs, consumables, professions, racials and more on WoW Forever.
 ## Notes-deDE: Anpassbare Komfortleisten für Buffs, Verbrauchsgegenstände, Berufe, Rassenfähigkeiten und mehr in WoW Forever.
 ## Author: TheRealDoubleG
-## Version: 0.5
+## Version: 0.6
 ## SavedVariables: ComfyBarDB
 ## X-Website: https://github.com/TheRealDoubleG/ComfyBar
 ## IconTexture: Interface\Icons\INV_Misc_Bag_10

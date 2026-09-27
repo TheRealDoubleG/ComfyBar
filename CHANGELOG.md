@@ -1,5 +1,11 @@
 # ComfyBar Changelog
 
+## 0.6 Beta – 27.09.2026
+- Added chat feedback when ComfyBar is enabled or disabled.
+- Minimap left-click now reports "ComfyBar: aktiviert." / "ComfyBar: deaktiviert." on German clients, matching OnPoint's toggle feedback.
+- Settings are refreshed after toggling so the UI immediately reflects the new state.
+
+
 ## 0.5 Beta – 27.09.2026
 - Fixed overlapping copyright/thanks text at the bottom of the Info tab.
 - Added "Apply layout to all bars" in the Bars tab.

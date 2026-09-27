@@ -4,7 +4,7 @@ ComfyBar = ComfyBar or {}
 local CB = ComfyBar
 
 CB.name = ADDON_NAME or "ComfyBar"
-CB.version = "0.5"
+CB.version = "0.6"
 CB.buildDate = "27.09.2026"
 CB.status = "Beta"
 CB.gameVersion = "WoW Forever 1.60.1"
@@ -201,6 +201,8 @@ function CB:SetEnabled(value)
     self.db.enabled = value and true or false
     if self.RefreshBars then self:RefreshBars() end
     if self.UpdateMinimapAppearance then self:UpdateMinimapAppearance() end
+    if self.RefreshOptions then self:RefreshOptions() end
+    self:Print(self.db.enabled and self:T("ENABLED_MSG") or self:T("DISABLED_MSG"))
     return true
 end
 
