@@ -1,5 +1,10 @@
 # ComfyBar Changelog
 
+## 0.7 Beta – 27.09.2026
+- Matched the Info-tab footer wording to OnPoint's family style.
+- Footer now thanks users for using ComfyBar and invites feedback and bug reports via Discord.
+
+
 ## 0.6 Beta – 27.09.2026
 - Added chat feedback when ComfyBar is enabled or disabled.
 - Minimap left-click now reports "ComfyBar: aktiviert." / "ComfyBar: deaktiviert." on German clients, matching OnPoint's toggle feedback.

@@ -4,7 +4,7 @@ ComfyBar = ComfyBar or {}
 local CB = ComfyBar
 
 CB.name = ADDON_NAME or "ComfyBar"
-CB.version = "0.6"
+CB.version = "0.7"
 CB.buildDate = "27.09.2026"
 CB.status = "Beta"
 CB.gameVersion = "WoW Forever 1.60.1"

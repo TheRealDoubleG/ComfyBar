@@ -1,6 +1,6 @@
 # ComfyBar
 
-**Version 0.6 – Beta**  
+**Version 0.7 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
@@ -76,7 +76,7 @@ World of Warcraft\Interface\AddOns\ComfyBar\ComfyBar.toc
 
 ## Development status
 
-ComfyBar is currently **Beta**. The 0.6 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
+ComfyBar is currently **Beta**. The 0.7 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
 
 ---
 
@@ -88,4 +88,4 @@ Die wichtigste Regel lautet:
 
 **Eine Eingabe des Spielers = höchstens eine Spielaktion.**
 
-Die Beta 0.6 liefert das aktuelle Test-Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.
+Die Beta 0.7 liefert das aktuelle Test-Grundgerüst mit mehreren Leisten, Bearbeitungsmodus, + Slot, WoW-Icons, Minimap-Button, Profil-Voreinstellungen und dem OnPoint-artigen Einstellungsmenü. Die intelligenten Klassen- und Inventarfunktionen folgen Schritt für Schritt.
