@@ -1,11 +1,13 @@
 # ComfyBar
 
-**Version 0.13 – Beta**  
+**Version 0.14 – Beta**  
 **Tested target: WoW Forever 1.60.1 / Build 70009 / Interface 16001**  
 Author: **TheRealDoubleG**  
 Discord: **the.real.double.g**
 
-ComfyBar is a customizable utility-bar addon for World of Warcraft Forever. It is designed to keep buffs, consumables, travel tools, professions, scrolls and racial abilities organized without turning into another full combat action-bar replacement.
+ComfyBar is a customizable utility-bar addon built specifically for **World of Warcraft: Forever**. It is designed to keep buffs, consumables, travel tools, professions, scrolls and racial abilities organized without turning into another full combat action-bar replacement.
+
+**Target policy:** ComfyBar is developed and tested for WoW: Forever only. Retail/Modern WoW, Midnight and WoW Classic are not compatibility targets.
 
 ## Core rule
 
@@ -30,6 +32,10 @@ The first beta establishes the common framework:
 - Optional per-bar **hide in combat** behavior.
 - Standard WoW spell/item icons, tooltips, item counts and cooldown sweeps.
 - Cooldown rendering safely forwards WoW protected/secret cooldown values to the native Cooldown widget without comparing them in addon Lua.
+- Secure action buttons are pooled and reused instead of being destroyed/recreated on every layout refresh.
+- Structural bar rebuilds requested during combat are deferred until combat ends.
+- Bag/spell cooldown events are coalesced into a single short-delay visual refresh instead of refreshing repeatedly for event bursts.
+- Settings can choose a **template for new characters**: clean ComfyBar defaults, account profile, another character, or a named custom profile. New characters receive a copy and remain independent.
 - Utility bar starts with the **Hearthstone**.
 - Built-in presets: **Minimal**, **Preferred**, **Complete**.
 - ComfyOnPoint-style settings window and minimap behavior.
@@ -80,7 +86,7 @@ World of Warcraft\Interface\AddOns\ComfyBar\ComfyBar.toc
 
 ## Development status
 
-ComfyBar is currently **Beta**. The 0.10 release is the current test foundation for in-game testing before the automatic class-, racial-, profession- and inventory-aware systems are added.
+ComfyBar is currently **Beta**. Version 0.14 is the current WoW: Forever test foundation before the automatic class-, racial-, profession- and inventory-aware systems are added.
 
 ---
 
