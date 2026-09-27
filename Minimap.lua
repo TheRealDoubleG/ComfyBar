@@ -1,4 +1,5 @@
-ComfyBar = ComfyBar or {}\nlocal CB = ComfyBar
+ComfyBar = ComfyBar or {}
+local CB = ComfyBar
 
 local function HubWantsBundled()
     local hub = rawget(_G, "ComfyHub")
@@ -136,4 +137,5 @@ function CB:InitializeMinimap()
     self.minimapButton = button
     self.minimapBundled = HubWantsBundled()
     self:UpdateMinimapPosition()
-    self:UpdateMinimapAppearance()\nend
+    self:UpdateMinimapAppearance()
+end
