@@ -7,7 +7,7 @@
 ## SavedVariables: ComfyBarDB
 ## X-Website: https://github.com/TheRealDoubleG/ComfyBar
 ## X-ComfySuite: true
-## X-ComfyUI: 1
+## X-ComfyUI: 2
 ## IconTexture: Interface\Icons\INV_Misc_Bag_10
 
 Locale.lua
