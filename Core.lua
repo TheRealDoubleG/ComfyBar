@@ -4,7 +4,7 @@ ComfyBar = ComfyBar or {}
 local CB = ComfyBar
 
 CB.name = ADDON_NAME or "ComfyBar"
-CB.version = "0.11"
+CB.version = "0.12"
 CB.buildDate = "27.09.2026"
 CB.status = "Beta"
 CB.gameVersion = "WoW Forever 1.60.1"
@@ -36,6 +36,12 @@ local defaults = {
         relativePoint = "CENTER",
         x = -360,
         y = 40,
+    },
+    ui = {
+        windowLocked = false,
+        windowOpacity = 100,
+        showWindowBorder = true,
+        backgroundAlpha = 92,
     },
     bars = {
         consumables = {
@@ -177,12 +183,16 @@ function CB:MigrateLegacyBarAnchors()
 end
 
 function CB:InitializeDB()
-    if type(ComfyBarDB) ~= "table" then
-        ComfyBarDB = CopyTable(defaults)
+    if self.InitializeProfileStorage then
+        self:InitializeProfileStorage(defaults, "ComfyBarDB")
     else
-        ApplyDefaults(ComfyBarDB, defaults)
+        if type(ComfyBarDB) ~= "table" then
+            ComfyBarDB = CopyTable(defaults)
+        else
+            ApplyDefaults(ComfyBarDB, defaults)
+        end
+        self.db = ComfyBarDB
     end
-    self.db = ComfyBarDB
     self:MigrateLegacyBarAnchors()
     self.editMode = false
 end
