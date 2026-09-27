@@ -62,7 +62,7 @@ function CB:InitializeMinimap()
     local border = button:CreateTexture(nil, "OVERLAY")
     border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
     border:SetSize(54, 54)
-    border:SetPoint("CENTER", button, "CENTER", 0, 0)
+    border:SetPoint("TOPLEFT", button, "TOPLEFT", 0, 0)
 
     button:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD")
 

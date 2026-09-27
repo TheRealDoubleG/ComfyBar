@@ -1,5 +1,8 @@
 # ComfyBar Changelog
 
+## 0.2 Beta – 27.09.2026
+- Fixed the minimap tracking-border anchor so the gold ring is correctly centered around the icon instead of appearing detached.
+
 ## 0.1 Beta – 27.09.2026
 
 - Renamed the project from ComfyMage to ComfyBar and made the architecture class-independent.
